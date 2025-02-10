@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savitri - Audio in Telugu</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; text-align: center; margin: 0; padding: 0; color: #333; }
+        h1 { color: #0056b3; font-size: 36px; }
+        h2 { color: #007BFF; font-size: 30px; }
+        h3 { color: #004080; font-size: 24px; }
+        h4 { color: #FF5733; font-size: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; box-shadow: 0px 0px 15px rgba(0,0,0,0.2); border-radius: 12px; }
+        .audio-player {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #eee;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .play-btn, .progress-container { cursor: pointer; }
+        .progress-container {
+            flex-grow: 1;
+            height: 8px;
+            background: #ccc;
+            border-radius: 5px;
+            position: relative;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 8px;
+            background: #007BFF;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+        .time { font-size: 14px; }
+        .highlight { background-color: #cce5ff !important; }
+        table { width: 100%; border-collapse: collapse; background: white; margin-top: 10px; border-radius: 10px; overflow: hidden; }
+        th, td { padding: 15px; border-bottom: 1px solid #ddd; text-align: left; font-size: 18px; }
+        th { background: #007BFF; color: white; }
+        .play-btn { cursor: pointer; color: #007BFF; font-weight: bold; font-size: 16px; }
+        .play-btn:hover { text-decoration: underline; color: #FF5733; }
+        .info { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Savitri</h1>
+        <h2>సావిత్రి</h2>
+        <h3>Maha Yogi Sri Aurobindo</h3>
+        <h3>మహా యోగి శ్రీ అరవిందులు</h3>
+        <h4>Audio In Telugu</h4>
+        <h4>వాజ్రహానం తెలుగులో</h4>
+        <h3>Book 1 - పుస్తకం 1</h3>
+        <h3>The Book of Beginnings</h3>
+        <h3>అతిప్రారంభ గ్రంథము</h3>
+        <div class="info" id="audioInfo">Select an audio to play</div>
+        <div class="audio-player">
+            <button id="playPause">▶</button>
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <span class="time" id="currentTime">0:00</span> / <span class="time" id="duration">0:00</span>
+        </div>
+        <table>
+            <tr>
+                <th>Canto Name</th>
+                <th>Section #</th>
+                <th>Audio</th>
+            </tr>
+            <tr data-audio="audio/Savitri_1_1_1_4.aac" data-canto="The Symbol Dawn" data-section="1.1 - 1.4">
+                <td>The Symbol Dawn</td>
+                <td>1.1 - 1.4</td>
+                <td><span class="play-btn">▶ Play</span></td>
+            </tr>
+            <tr data-audio="audio2.mp3" data-canto="The Symbol Dawn" data-section="1.5 - 1.9">
+                <td>The Symbol Dawn</td>
+                <td>1.5 - 1.9</td>
+                <td><span class="play-btn">▶ Play</span></td>
+            </tr>
+            <tr data-audio="audio3.mp3" data-canto="The Symbol Dawn" data-section="1.10 - 1.21">
+                <td>The Symbol Dawn</td>
+                <td>1.10 - 1.21</td>
+                <td><span class="play-btn">▶ Play</span></td>
+            </tr>
+            <tr data-audio="audio4.mp3" data-canto="The Symbol Dawn" data-section="1.22 - 1.34">
+                <td>The Symbol Dawn</td>
+                <td>1.22 - 1.34</td>
+                <td><span class="play-btn">▶ Play</span></td>
+            </tr>
+            <tr data-audio="audio5.mp3" data-canto="The Issue" data-section="2.1 - 2.13">
+                <td>The Issue</td>
+                <td>2.1 - 2.13</td>
+                <td><span class="play-btn">▶ Play</span></td>
+            </tr>
+        </table>
+    </div>
+    <audio id="audioPlayer"></audio>
+    <script>
+        const audioPlayer = document.getElementById("audioPlayer");
+        const progressBar = document.getElementById("progressBar");
+        const playPauseButton = document.getElementById("playPause");
+        const progressContainer = document.getElementById("progressContainer");
+        const currentTimeDisplay = document.getElementById("currentTime");
+        const durationDisplay = document.getElementById("duration");
+        const audioInfo = document.getElementById("audioInfo");
+        let currentRow = null;
+        document.querySelectorAll(".play-btn").forEach(btn => {
+            btn.addEventListener("click", function() {
+                if (currentRow) currentRow.classList.remove("highlight");
+                const row = this.closest("tr");
+                row.classList.add("highlight");
+                currentRow = row;
+                audioPlayer.src = row.dataset.audio;
+                audioInfo.textContent = `${row.dataset.canto} - ${row.dataset.section}`;
+                audioPlayer.play();
+                playPauseButton.textContent = "⏸ Pause";
+            });
+        });
+        playPauseButton.addEventListener("click", () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playPauseButton.textContent = "⏸ Pause";
+            } else {
+                audioPlayer.pause();
+                playPauseButton.textContent = "▶ Play";
+            }
+        });
+        audioPlayer.addEventListener("timeupdate", () => {
+            progressBar.style.width = (audioPlayer.currentTime / audioPlayer.duration) * 100 + "%";
+            currentTimeDisplay.textContent = formatTime(audioPlayer.currentTime);
+            durationDisplay.textContent = formatTime(audioPlayer.duration);
+        });
+        
+        progressContainer.addEventListener("click", (e) => {
+            const percent = e.offsetX / progressContainer.offsetWidth;
+            audioPlayer.currentTime = percent * audioPlayer.duration;
+        });
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+        }
+    </script>
+</body>
+</html>
